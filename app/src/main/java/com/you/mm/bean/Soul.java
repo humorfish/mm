@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Drakeet <drakeet.me@gmail.com>
+ * Copyright (C) 2015 Drakeet <drakeet.me@gmail.com>
  *
  * This file is part of Meizhi
  *
@@ -17,20 +17,22 @@
  * along with Meizhi.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.you.mm.model;
+package com.you.mm.bean;
 
-import com.you.mm.widget.MultiSwipeRefreshLayout;
+import com.litesuits.orm.db.annotation.Column;
+import com.litesuits.orm.db.annotation.NotNull;
+import com.litesuits.orm.db.annotation.PrimaryKey;
+import com.litesuits.orm.db.annotation.Unique;
+import com.litesuits.orm.db.enums.AssignType;
+
+import java.io.Serializable;
 
 /**
- * Created by drakeet on 16/5/1.
+ * Created by drakeet(http://drakeet.me)
+ * Date: 8/18/15 13:55
  */
-public interface SwipeRefreshLayer {
+public class Soul implements Serializable {
 
-    void requestDataRefresh();
-
-    void setRefresh(boolean refresh);
-
-    void setProgressViewOffset(boolean scale, int start, int end);
-
-    void setCanChildScrollUpCallback(MultiSwipeRefreshLayout.CanChildScrollUpCallback callback);
+    @PrimaryKey(AssignType.AUTO_INCREMENT) @Column("_id") public long id;
+    @NotNull @Unique @Column("objectId") public String objectId;
 }
