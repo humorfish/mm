@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">mm</string>
+    <string name="tip_guide">指引: 点击卡片的标题文字，可以打开干货页面 :)</string>
+    <string name="i_know">知道了</string>
 </resources>
