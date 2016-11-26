@@ -46,7 +46,7 @@ public class MainActivity extends AutoLayoutActivity implements SwipeRefreshLaye
         mMeizhiList = new ArrayList<>();
         QueryBuilder query = new QueryBuilder(Meizhi.class);
         query.limit(0, 10);
-        mMeizhiList.addAll(App.sDb.query(query));
+//        mMeizhiList.addAll(App.sDb.query(query));
 
         initView();
     }
@@ -77,7 +77,7 @@ public class MainActivity extends AutoLayoutActivity implements SwipeRefreshLaye
                     if (!mIsFirstTimeTouchBottom) {
                         mSwipeRefreshLayout.setRefreshing(true);
                         mPage += 1;
-                        //loadData();
+                        loadData(false);
                     } else {
                         mIsFirstTimeTouchBottom = false;
                     }
@@ -86,16 +86,15 @@ public class MainActivity extends AutoLayoutActivity implements SwipeRefreshLaye
         };
     }
 
-//    /**
-//     * 获取服务数据
-//     *
-//     * @param clean 清除来自数据库缓存或者已有数据。
-//     */
-//    private void loadData(boolean clean) {
-//        mLastVideoIndex = 0;
+    /**
+     * 获取服务数据
+     *
+     * @param clean 清除来自数据库缓存或者已有数据。
+     */
+    private void loadData(boolean clean) {
+        mLastVideoIndex = 0;
 //        // @formatter:off
-//        Subscription s = Observable
-//                .zip(sGankIO.getMeizhiData(mPage),
+//        Subscription s = Observable.zip(sGankIO.getMeizhiData(mPage),
 //                        sGankIO.get休息视频Data(mPage),
 //                        this::createMeizhiDataWith休息视频Desc)
 //                .map(meizhiData -> meizhiData.results)
@@ -113,7 +112,7 @@ public class MainActivity extends AutoLayoutActivity implements SwipeRefreshLaye
 //                }, throwable -> loadError(throwable));
 //        // @formatter:on
 //        addSubscription(s);
-//    }
+    }
 
     @Override
     public void requestDataRefresh() {
