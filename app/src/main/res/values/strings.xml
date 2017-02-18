@@ -1,5 +1,32 @@
 <resources>
     <string name="app_name">mm</string>
-    <string name="tip_guide">指引: 点击卡片的标题文字，可以打开干货页面 :)</string>
     <string name="i_know">知道了</string>
+
+    <!--action-->
+    <string name="action_subject">今日肥皂家话题</string>
+    <string name="action_github_login">登录 GitHub 帐号</string>
+    <string name="action_github_trending">今日 GitHub 热门</string>
+    <string name="action_share">分享</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_copy_url">复制链接</string>
+    <string name="action_open_url">打开链接</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about">可爱的「关于」页面</string>
+
+    <!--suggestion-->
+    <string name="action_notifiable">每天中午提醒</string>
+
+
+    <!--tips-->
+    <!--tip-->
+    <string name="tip_video_play">这其实是个网页浏览器，需要你手动点击页面中的视频进行播放。魅族用户可以上滑 home 键来返回竖屏页面</string>
+    <string name="tip_login_github">妹纸 App 并无帐号系统，这个菜单只是提前登录保留 cookies，以便于之后进 GitHub 页面 star 项目</string>
+    <string name="tip_guide">指引: 点击卡片的标题文字，可以打开干货页面 :)</string>
+    <string name="tip_for_no_gank">今天编辑们休息哦，没有干货提供！\n如果想在此处展示您的作品，请联系 drakeet.</string>
+    <string name="tip_empty_gank">今日は肥皂家がない、干物の供給がない...\n今天编辑们休息哦，没有干货提供！\n如果想在此处展示您的优秀作品，请联系 drakeet.\n\n如果你喜欢我开发的应用，\n你还可以试试同样用心的 App：\n\n纯纯打码 http://fir.im/puremosaic\n验证码助手 http://fir.im/codehelper\n贝壳单词 http://fir.im/seashell</string>
+    <string name="tip_open_fail">打开失败，没有找到可以打开该链接的其它应用 :(</string>
+    <string name="tip_copy_done">复制成功</string>
+    <string name="tip_picture_save_fail">图片保存失败，请再次尝试保存！</string>
+
+
 </resources>

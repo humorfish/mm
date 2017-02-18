@@ -10,6 +10,7 @@ public class Once
 {
     private final static String SHARE_NAME = "once";
     public final static String SHARE_KEY_SUGGEST = "suggest";
+    public final static String KEY_LOGIN = "login";
 
     public static void show(Context context, String type, OnceCallback dosomething)
     {
