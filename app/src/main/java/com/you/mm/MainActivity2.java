@@ -10,7 +10,6 @@ import com.you.mm.bean.DrakeetFactory;
 import com.you.mm.bean.GankApi;
 import com.you.mm.bean.Meizhi;
 import com.you.mm.model.SwipeRefreshLayer;
-import com.you.mm.page.adapter.MmListAdapter;
 import com.you.mm.util.Once;
 import com.you.mm.widget.MultiSwipeRefreshLayout;
 import com.zhy.autolayout.AutoLayoutActivity;

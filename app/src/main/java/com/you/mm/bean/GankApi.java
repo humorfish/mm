@@ -9,7 +9,7 @@ import retrofit2.http.Path;
  */
 public interface GankApi {
     @GET("/data/福利/" + DrakeetFactory.meiziSize + "/{page}")
-    Observable<Object> getMeiziData(@Path("page") int page);
+    Observable<Object> getMeizhiData(@Path("page") int page);
 
     @GET("/day/{year}/{month}/{day}")
     Observable<Object> getGankData(@Path("year") int year, @Path("month") int month, @Path("day") int day);

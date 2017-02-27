@@ -1,103 +1,154 @@
 package com.you.mm;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
+import android.os.PersistableBundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
-import java.lang.reflect.Method;
+import com.litesuits.orm.db.assit.QueryBuilder;
+import com.you.mm.bean.Meizhi;
+import com.you.mm.bean.data.MeizhiData;
+import com.you.mm.bean.data.休息视频data;
+import com.you.mm.bean.entity.Gank;
+import com.you.mm.page.adapter.MeizhiListAdapter;
+import com.you.mm.page.base.SwipeRefreshBaseActivity;
+import com.you.mm.util.Dates;
+import com.you.mm.util.Once;
+
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import io.reactivex.Flowable;
+
 
 /**
  * Created by ou on 2017/1/20.
  */
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends SwipeRefreshBaseActivity
 {
+    private static final int PRELOAD_SIZE = 6;
+    private boolean mIsFirstTimeTouchBottom = true;
+    private int mPage = 1;
+    private boolean mMeizhiBeTouched;
+    private int mLastVideoIndex = 0;
+
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    ShareActionProvider mShareActionProvider;
+    @BindView(R.id.rv_meizhi)
+    RecyclerView mRecyclerView;
+
+    private List<Meizhi> mMeizhiList;
+    private MeizhiListAdapter meizhiListAdapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
+    protected int provideContentViewId()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_slide);
-        ButterKnife.bind(this);
-        initView();
+        return R.layout.activity_main;
     }
 
-    private void initView()
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState)
     {
-        mToolbar.setTitle("Rocko");
+        super.onCreate(savedInstanceState, persistentState);
+        mMeizhiList = new ArrayList<>();
 
-        /* 菜单的监听可以在toolbar里设置，也可以像ActionBar那样，通过Activity的onOptionsItemSelected回调方法来处理 */
-        mToolbar.setOnMenuItemClickListener(item ->
+        QueryBuilder query = new QueryBuilder(Meizhi.class);
+        query.appendOrderDescBy("publishedAt");
+        query.limit(0, 10);
+
+        mMeizhiList.addAll(App.sDb.query(query));
+        setUpRecycleView();
+    }
+
+    private void setUpRecycleView()
+    {
+        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(layoutManager);
+        meizhiListAdapter = new MeizhiListAdapter(this, mMeizhiList);
+        mRecyclerView.setAdapter(meizhiListAdapter);
+
+        Once.show(this, "tip_guide_6", () ->
+                Snackbar.make(mRecyclerView, getString(R.string.tip_guide), Snackbar.LENGTH_SHORT).setAction(R.string.i_know, view ->
+                {} ).show());
+
+        mRecyclerView.addOnScrollListener(getOnBottomListener(layoutManager));
+    }
+
+    public RecyclerView.OnScrollListener getOnBottomListener(StaggeredGridLayoutManager layoutManager)
+    {
+        return new RecyclerView.OnScrollListener()
         {
-            switch (item.getItemId())
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
-                case R.id.action_settings:
-                    Toast.makeText(MainActivity.this, "action_settings", Toast.LENGTH_SHORT).show();
-                    break;
-                case R.id.action_share:
-                    Toast.makeText(MainActivity.this, "action_share", Toast.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+                super.onScrolled(recyclerView, dx, dy);
+                boolean isBottom = layoutManager.findLastCompletelyVisibleItemPositions(new int[2])[1] >= meizhiListAdapter.getItemCount() - PRELOAD_SIZE;
+                if (! mSwipeRefreshLayout.isRefreshing() && isBottom)
+                {
+                    if (! mIsFirstTimeTouchBottom)
+                    {
+                        mSwipeRefreshLayout.setRefreshing(true);
+                        mPage +=1;
+                        loadData(false);
+                    } else
+                    {
+                        mIsFirstTimeTouchBottom = false;
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * 获取服务数据
+     *
+     * @param clean 清除来自数据库缓存或者已有数据。
+     */
+    private void loadData(boolean clean)
+    {
+        mLastVideoIndex = 0;
+        Flowable.zip(sGankIO.getMeizhiData(mPage),
+                sGankIO.get休息视频Data(mPage),
+                ).subscribe();
+    }
+
+    private MeizhiData createMeizhiDataWith休息视频Desc(MeizhiData data, 休息视频data love)
+    {
+        for (Meizhi meizhi : data.results)
+        {
+            meizhi.desc = meizhi.desc + " " +
+                    getFirstVideoDesc(meizhi.publishedAt, love.results);
+        }
+        return data;
+    }
+
+    private String getFirstVideoDesc(Date publishedAt, List<Gank> results)
+    {
+        String videoDesc = "";
+
+        for (int i= mLastVideoIndex; i < results.size(); i++)
+        {
+            Gank mGank = results.get(i);
+            if (mGank.publishedAt == null)
+            {
+                mGank.publishedAt = mGank.createdAt;
             }
 
-            return true;
-        });
-    }
-
-    private void setIconsVisible(Menu menu, boolean flag)
-    {
-        //判断menu是否为空
-        if (menu != null)
-        {
-            try
+            if (Dates.isTheSameDay(publishedAt, mGank.publishedAt))
             {
-                //如果不为空,就反射拿到menu的setOptionalIconsVisible方法
-                Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                //暴力访问该方法
-                method.setAccessible(true);
-                //调用该方法显示icon
-                method.invoke(menu, flag);
-            } catch (Exception e)
-            {
-                e.printStackTrace();
+                videoDesc = mGank.desc;
+                mLastVideoIndex = i;
+                break;
             }
         }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        setIconsVisible(menu, true);
-
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menu.findItem(R.id.action_share));
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/*");
-        mShareActionProvider.setShareIntent(intent);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        return super.onOptionsItemSelected(item);
+        return videoDesc;
     }
 }

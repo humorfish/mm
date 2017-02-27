@@ -1,8 +1,5 @@
 package com.you.mm.widget;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -13,6 +10,9 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.you.mm.R;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/11/25.
  */
-public class Slidemenu {
-
+public class Slidemenu
+{
     private static final int ANIMATION_TIME = 200;
     Context context;
     ViewGroup mViewGroup;
@@ -33,7 +33,8 @@ public class Slidemenu {
     private int px;
     private boolean isMenuOpened;
 
-    public void setup(Context activityContext, ViewGroup layout) {
+    public void setup(Context activityContext, ViewGroup layout)
+    {
         context = activityContext;
         promotedActions = new ArrayList<ImageButton>();
         mViewGroup = layout;
@@ -43,23 +44,22 @@ public class Slidemenu {
     }
 
 
-    public ImageButton addMainItem(Drawable drawable) {
-
+    public ImageButton addMainItem(Drawable drawable)
+    {
         ImageButton button = (ImageButton) LayoutInflater.from(context).inflate(R.layout.main_promoted_action_button, mViewGroup, false);
 
         button.setImageDrawable(drawable);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (isMenuOpened) {
-                    closePromotedActions().start();
-                    isMenuOpened = false;
-                } else {
-                    isMenuOpened = true;
-                    openPromotedActions().start();
-                }
+        button.setOnClickListener(view ->
+        {
+            if (isMenuOpened)
+            {
+                closePromotedActions().start();
+                isMenuOpened = false;
+            } else
+            {
+                isMenuOpened = true;
+                openPromotedActions().start();
             }
         });
 
@@ -70,8 +70,8 @@ public class Slidemenu {
         return button;
     }
 
-    public void addItem(Drawable drawable, View.OnClickListener onClickListener) {
-
+    public void addItem(Drawable drawable, View.OnClickListener onClickListener)
+    {
         ImageButton button = (ImageButton) LayoutInflater.from(context).inflate(R.layout.promoted_action_button, mViewGroup, false);
 
         button.setImageDrawable(drawable);
@@ -88,89 +88,103 @@ public class Slidemenu {
     /**
      * Set close animation for promoted actions
      */
-    public AnimatorSet closePromotedActions() {
-
-        if (objectAnimator == null) {
+    public AnimatorSet closePromotedActions()
+    {
+        if (objectAnimator == null)
+        {
             objectAnimatorSetup();
         }
 
         AnimatorSet animation = new AnimatorSet();
 
-        for (int i = 0; i < promotedActions.size(); i++) {
+        for (int i = 0; i < promotedActions.size(); i++)
+        {
 
             objectAnimator[i] = setCloseAnimation(promotedActions.get(i), i);
         }
 
-        if (objectAnimator.length == 0) {
+        if (objectAnimator.length == 0)
+        {
             objectAnimator = null;
         }
 
         animation.playTogether(objectAnimator);
-        animation.addListener(new Animator.AnimatorListener() {
+        animation.addListener(new Animator.AnimatorListener()
+        {
             @Override
-            public void onAnimationStart(Animator animator) {
+            public void onAnimationStart(Animator animator)
+            {
                 mainImageButton.startAnimation(rotateCloseAnimation);
                 mainImageButton.setClickable(false);
             }
 
             @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(Animator animator)
+            {
                 mainImageButton.setClickable(true);
                 hidePromotedActions();
             }
 
             @Override
-            public void onAnimationCancel(Animator animator) {
+            public void onAnimationCancel(Animator animator)
+            {
                 mainImageButton.setClickable(true);
             }
 
             @Override
-            public void onAnimationRepeat(Animator animator) {
+            public void onAnimationRepeat(Animator animator)
+            {
             }
         });
 
         return animation;
     }
 
-    public AnimatorSet openPromotedActions() {
-
-        if (objectAnimator == null) {
+    public AnimatorSet openPromotedActions()
+    {
+        if (objectAnimator == null)
+        {
             objectAnimatorSetup();
         }
 
-
         AnimatorSet animation = new AnimatorSet();
 
-        for (int i = 0; i < promotedActions.size(); i++) {
-
+        for (int i = 0; i < promotedActions.size(); i++)
+        {
             objectAnimator[i] = setOpenAnimation(promotedActions.get(i), i);
         }
 
-        if (objectAnimator.length == 0) {
+        if (objectAnimator.length == 0)
+        {
             objectAnimator = null;
         }
 
         animation.playTogether(objectAnimator);
-        animation.addListener(new Animator.AnimatorListener() {
+        animation.addListener(new Animator.AnimatorListener()
+        {
             @Override
-            public void onAnimationStart(Animator animator) {
+            public void onAnimationStart(Animator animator)
+            {
                 mainImageButton.startAnimation(rotateOpenAnimation);
                 mainImageButton.setClickable(false);
                 showPromotedActions();
             }
 
             @Override
-            public void onAnimationEnd(Animator animator) {
+            public void onAnimationEnd(Animator animator)
+            {
                 mainImageButton.setClickable(true);
             }
 
             @Override
-            public void onAnimationCancel(Animator animator) {
+            public void onAnimationCancel(Animator animator)
+            {
                 mainImageButton.setClickable(true);
             }
 
             @Override
-            public void onAnimationRepeat(Animator animator) {
+            public void onAnimationRepeat(Animator animator)
+            {
             }
         });
 
@@ -178,8 +192,8 @@ public class Slidemenu {
         return animation;
     }
 
-    private void objectAnimatorSetup() {
-
+    private void objectAnimatorSetup()
+    {
         objectAnimator = new ObjectAnimator[promotedActions.size()];
     }
 
@@ -191,19 +205,19 @@ public class Slidemenu {
      * @param position
      * @return objectAnimator
      */
-    private ObjectAnimator setCloseAnimation(ImageButton promotedAction, int position) {
-
+    private ObjectAnimator setCloseAnimation(ImageButton promotedAction, int position)
+    {
         ObjectAnimator objectAnimator;
 
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-            objectAnimator = ObjectAnimator.ofFloat(promotedAction, View.TRANSLATION_Y, -px * (promotedActions.size() - position), 0f);
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            objectAnimator = ObjectAnimator.ofFloat(promotedAction, "translationY", -px * (promotedActions.size() - position), 0f);
             objectAnimator.setRepeatCount(0);
             objectAnimator.setDuration(ANIMATION_TIME * (promotedActions.size() - position));
 
-        } else {
-
-            objectAnimator = ObjectAnimator.ofFloat(promotedAction, View.TRANSLATION_X, -px * (promotedActions.size() - position), 0f);
+        } else
+        {
+            objectAnimator = ObjectAnimator.ofFloat(promotedAction, "translationX", -px * (promotedActions.size() - position), 0f);
             objectAnimator.setRepeatCount(0);
             objectAnimator.setDuration(ANIMATION_TIME * (promotedActions.size() - position));
         }
@@ -218,18 +232,20 @@ public class Slidemenu {
      * @param position
      * @return objectAnimator
      */
-    private ObjectAnimator setOpenAnimation(ImageButton promotedAction, int position) {
-
+    private ObjectAnimator setOpenAnimation(ImageButton promotedAction, int position)
+    {
         ObjectAnimator objectAnimator;
 
-        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
 
-            objectAnimator = ObjectAnimator.ofFloat(promotedAction, View.TRANSLATION_Y, 0f, -px * (promotedActions.size() - position));
+            objectAnimator = ObjectAnimator.ofFloat(promotedAction, "translationY", 0f, -px * (promotedActions.size() - position));
             objectAnimator.setRepeatCount(0);
             objectAnimator.setDuration(ANIMATION_TIME * (promotedActions.size() - position));
 
-        } else {
-            objectAnimator = ObjectAnimator.ofFloat(promotedAction, View.TRANSLATION_X, 0f, -px * (promotedActions.size() - position));
+        } else
+        {
+            objectAnimator = ObjectAnimator.ofFloat(promotedAction, "translationX", 0f, -px * (promotedActions.size() - position));
             objectAnimator.setRepeatCount(0);
             objectAnimator.setDuration(ANIMATION_TIME * (promotedActions.size() - position));
         }
@@ -237,31 +253,32 @@ public class Slidemenu {
         return objectAnimator;
     }
 
-    private void hidePromotedActions() {
-
-        for (int i = 0; i < promotedActions.size(); i++) {
+    private void hidePromotedActions()
+    {
+        for (int i = 0; i < promotedActions.size(); i++)
+        {
             promotedActions.get(i).setVisibility(View.GONE);
         }
     }
 
-    private void showPromotedActions() {
-
-        for (int i = 0; i < promotedActions.size(); i++) {
+    private void showPromotedActions()
+    {
+        for (int i = 0; i < promotedActions.size(); i++)
+        {
             promotedActions.get(i).setVisibility(View.VISIBLE);
         }
     }
 
-    private void openRotation() {
-
-        rotateOpenAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                0.5f);
+    private void openRotation()
+    {
+        rotateOpenAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateOpenAnimation.setFillAfter(true);
         rotateOpenAnimation.setFillEnabled(true);
         rotateOpenAnimation.setDuration(ANIMATION_TIME);
     }
 
-    private void closeRotation() {
-
+    private void closeRotation()
+    {
         rotateCloseAnimation = new RotateAnimation(45, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateCloseAnimation.setFillAfter(true);
         rotateCloseAnimation.setFillEnabled(true);
