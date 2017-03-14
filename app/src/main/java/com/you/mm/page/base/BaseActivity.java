@@ -11,8 +11,9 @@ import com.you.mm.page.AboutActivity;
 import com.you.mm.util.Once;
 import com.you.mm.util.Toasts;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 
 /**
  * Created by you on 2017/2/18.
@@ -21,21 +22,29 @@ import rx.subscriptions.CompositeSubscription;
 public class BaseActivity extends AppCompatActivity
 {
     public static final GankApi sGankIO = DrakeetFactory.getsGankIOSingleton();
-    private CompositeSubscription mCompositeSubscription;
+    private CompositeDisposable mCompositeSubscription;
 
-    public CompositeSubscription getCompositeSubscription()
+    public CompositeDisposable getCompositeDisposable()
     {
         if (mCompositeSubscription == null)
         {
-            mCompositeSubscription = new CompositeSubscription();
+            mCompositeSubscription = new CompositeDisposable();
         }
 
         return mCompositeSubscription;
     }
 
-    public void addSubscription(Subscription s)
+    public void addDisposable(Disposable disposable)
     {
-        getCompositeSubscription().add(s);
+        getCompositeDisposable().add(disposable);
+    }
+
+    public void dispose(Disposable disposable)
+    {
+        if (mCompositeSubscription != null)
+        {
+            mCompositeSubscription.delete(disposable);
+        }
     }
 
     @Override
@@ -68,6 +77,6 @@ public class BaseActivity extends AppCompatActivity
     {
         super.onDestroy();
         if (mCompositeSubscription != null)
-            mCompositeSubscription.unsubscribe();
+            mCompositeSubscription.clear();
     }
 }

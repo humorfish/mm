@@ -29,4 +29,11 @@
     <string name="tip_picture_save_fail">图片保存失败，请再次尝试保存！</string>
 
 
+    <string name="loading">加载中...</string>
+    <string name="snap_load_fail">加载失败，请重试</string>
+    <string name="retry">重试</string>
+    <string name="notifiable_on">已经开启提醒</string>
+    <string name="notifiable_off">已经关闭提醒</string>
+    <string name="share_meizhi_to">分享妹纸到...</string>
+
 </resources>

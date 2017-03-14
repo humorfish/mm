@@ -7,7 +7,7 @@ public class DrakeetFactory
 {
     protected static final Object monitor = new Object();
 
-    public static final int meiziSize = 10;
+    public static final int meizhiSize = 10;
     public static final int gankSize = 5;
     static GankApi sGankIOSingleton = null;
     static DrakeetApi sDrakeetSingleton = null;

@@ -2,7 +2,6 @@ package com.you.mm.page.base;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
@@ -32,9 +31,9 @@ public abstract class ToolbarActivity extends BaseActivity
     protected boolean mIsHiden = false;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState)
+    protected void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState, persistentState);
+        super.onCreate(savedInstanceState);
         setContentView(provideContentViewId());
 
         mAppBar = (AppBarLayout) findViewById(R.id.app_bar_layout);

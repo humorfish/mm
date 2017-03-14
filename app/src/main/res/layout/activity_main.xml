@@ -4,16 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar"/>
-
-    <TextView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="100dp"
-        android:text="TEST"
-        android:gravity="center"
-        android:textColor="@android:color/black"
-        android:background="@drawable/circle"/>
+    <include layout="@layout/view_toolbar"/>
 
     <com.you.mm.widget.MultiSwipeRefreshLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
