@@ -21,75 +21,95 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2017/2/27.
  */
 
-public class MeizhiListAdapter extends RecyclerView.Adapter<MeizhiListAdapter.ViewHolder>
+public class MeizhiListAdapter
+        extends RecyclerView.Adapter<MeizhiListAdapter.ViewHolder>
 {
 
+    public static final String TAG = "MeizhiListAdapter";
+
+    private List<Meizhi> mList;
     private Context mContext;
-    private List<Meizhi> meizhis;
     private OnMeizhiTouchListener mOnMeizhiTouchListener;
 
-    public MeizhiListAdapter(Context mContext, List<Meizhi> meizhis)
+    public MeizhiListAdapter(Context context)
     {
-        this.meizhis = meizhis;
-        this.mContext = mContext;
+        mContext = context;
+    }
+
+    public void setDatas(List<Meizhi> meizhiList)
+    {
+        mList = meizhiList;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int i)
     {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mm, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_mm, parent, false);
         return new ViewHolder(v);
     }
 
+
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position)
     {
-        Meizhi meizhi = meizhis.get(position);
+        Meizhi meizhi = mList.get(position);
         int limit = 48;
-        String text = meizhi.desc.length() > limit ? meizhi.desc.substring(0, limit) + "...." : meizhi.desc;
-        holder.meizhi = meizhi;
-        holder.titleView.setText(text);
-        holder.card.setTag(meizhi.desc);
+        String text = meizhi.desc.length() > limit ? meizhi.desc.substring(0, limit) +
+                "..." : meizhi.desc;
+        viewHolder.meizhi = meizhi;
+        viewHolder.titleView.setText(text);
+        viewHolder.card.setTag(meizhi.desc);
 
-        Glide.with(mContext).load(meizhi.url).centerCrop().into(holder.meizhiView).getSize((width, height) ->
-        {
-            if (! holder.card.isShown())
-            {
-                holder.card.setVisibility(View.VISIBLE);
-            }
-        });
+        Glide.with(mContext)
+                .load(meizhi.url)
+                .centerCrop()
+                .into(viewHolder.meizhiView)
+                .getSize((width, height) -> {
+                    if (!viewHolder.card.isShown())
+                    {
+                        viewHolder.card.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
-    public interface OnMeizhiTouchListener
+    @Override
+    public void onViewRecycled(ViewHolder holder)
     {
-        void onTouch(View v, View meizhiView, View card, Meizhi meizhi);
-    }
-
-    public void setOnMeizhiTouchListener(OnMeizhiTouchListener mOnMeizhiTouchListener)
-    {
-        this.mOnMeizhiTouchListener = mOnMeizhiTouchListener;
+        super.onViewRecycled(holder);
     }
 
     @Override
     public int getItemCount()
     {
-        return meizhis.size();
+        return mList.size();
     }
+
+
+    public void setOnMeizhiTouchListener(OnMeizhiTouchListener onMeizhiTouchListener)
+    {
+        this.mOnMeizhiTouchListener = onMeizhiTouchListener;
+    }
+
+    interface OnMeizhiTouchListener
+    {
+        void onTouch(View view, RatioImageView RameizhiView, View card, Meizhi meizhi);
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        @BindView(R.id.iv_meizhi)
+        @BindView(R.id.meizhi)
         RatioImageView meizhiView;
-        @BindView(R.id.tv_title)
+        @BindView(R.id.title)
         TextView titleView;
-
         View card;
         Meizhi meizhi;
+
 
         public ViewHolder(View itemView)
         {
             super(itemView);
-
             card = itemView;
             ButterKnife.bind(this, itemView);
             meizhiView.setOnClickListener(this);
@@ -97,10 +117,11 @@ public class MeizhiListAdapter extends RecyclerView.Adapter<MeizhiListAdapter.Vi
             meizhiView.setOriginalSize(50, 50);
         }
 
+
         @Override
-        public void onClick(View view)
+        public void onClick(View v)
         {
-            mOnMeizhiTouchListener.onTouch(view, meizhiView, card, meizhi);
+            mOnMeizhiTouchListener.onTouch(v, meizhiView, card, meizhi);
         }
     }
 }

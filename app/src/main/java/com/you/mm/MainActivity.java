@@ -21,6 +21,7 @@ import com.you.mm.util.Dates;
 import com.you.mm.util.Once;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public class MainActivity extends SwipeRefreshBaseActivity
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
-    @BindView(R.id.rv_meizhi)
+    @BindView(R.id.list)
     RecyclerView mRecyclerView;
 
     private List<Meizhi> mMeizhiList;
@@ -101,7 +102,8 @@ public class MainActivity extends SwipeRefreshBaseActivity
     {
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
-        meizhiListAdapter = new MeizhiListAdapter(this, mMeizhiList);
+        meizhiListAdapter = new MeizhiListAdapter(this);
+        meizhiListAdapter.setDatas(mMeizhiList);
         mRecyclerView.setAdapter(meizhiListAdapter);
 
         Once.show(this, "tip_guide_6", () ->
@@ -153,17 +155,21 @@ public class MainActivity extends SwipeRefreshBaseActivity
                 .map(meizhiData -> meizhiData.results)
                 .doOnNext(unsortMeizhis ->
                 {
-                    Log.i("", "unsortMeizhis.size:" + unsortMeizhis.size());
-                    List<Meizhi> sortedList = new ArrayList<>(unsortMeizhis.size());
+                    Log.i("", "unsortMeizhis.objectId:" + unsortMeizhis.get(0).publishedAt);
+                    List<Meizhi> sortedList = new ArrayList<>(Arrays.asList(new Meizhi[unsortMeizhis.size()]));
                     Collections.copy(sortedList, unsortMeizhis);
                     Collections.sort(sortedList, (meizhi1, meizhi2) -> meizhi1.publishedAt.compareTo(meizhi2.publishedAt));
                     saveMeizhis(sortedList);
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> setRefresh(false))
-                .subscribe(meizhis -> {
-                    if (clean) mMeizhiList.clear();
+                .subscribe(meizhis ->
+                {
+                    if (clean)
+                        mMeizhiList.clear();
+
                     mMeizhiList.addAll(meizhis);
+                    meizhiListAdapter.setDatas(mMeizhiList);
                     meizhiListAdapter.notifyDataSetChanged();
                     setRefresh(false);
                 }, throwable -> loadError(throwable));
