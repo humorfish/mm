@@ -129,7 +129,8 @@ public class MainActivity extends SwipeRefreshBaseActivity
                         mSwipeRefreshLayout.setRefreshing(true);
                         mPage +=1;
                         loadData(false);
-                    } else
+                    }
+                    else
                     {
                         mIsFirstTimeTouchBottom = false;
                     }
