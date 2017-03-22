@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.umeng.update.UmengUpdateAgent;
 import com.you.mm.bean.Meizhi;
 import com.you.mm.bean.data.MeizhiData;
@@ -43,6 +45,7 @@ public class MainActivity extends SwipeRefreshBaseActivity
     private boolean mIsFirstTimeTouchBottom = true;
     private int mPage = 1;
     private int mLastVideoIndex = 0;
+    private boolean mMeizhiBeTouched = false;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -111,6 +114,7 @@ public class MainActivity extends SwipeRefreshBaseActivity
                 {} ).show());
 
         mRecyclerView.addOnScrollListener(getOnBottomListener(layoutManager));
+        meizhiListAdapter.setOnMeizhiTouchListener(getOnMeizhiTouchListener());
     }
 
     public RecyclerView.OnScrollListener getOnBottomListener(StaggeredGridLayoutManager layoutManager)
@@ -135,6 +139,32 @@ public class MainActivity extends SwipeRefreshBaseActivity
                         mIsFirstTimeTouchBottom = false;
                     }
                 }
+            }
+        };
+    }
+
+    private MeizhiListAdapter.OnMeizhiTouchListener getOnMeizhiTouchListener()
+    {
+        return (view, RameizhiView, card, meizhi) ->
+        {
+            if (meizhi == null) return;
+            if (view == RameizhiView && !mMeizhiBeTouched)
+            {
+                mMeizhiBeTouched = true;
+                Picasso.with(this).load(meizhi.url).fetch(new Callback()
+                {
+                    @Override
+                    public void onSuccess()
+                    {
+                        mMeizhiBeTouched = false;
+                    }
+
+                    @Override
+                    public void onError()
+                    {
+                        mMeizhiBeTouched = false;
+                    }
+                });
             }
         };
     }

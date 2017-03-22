@@ -91,7 +91,7 @@ public class MeizhiListAdapter
         this.mOnMeizhiTouchListener = onMeizhiTouchListener;
     }
 
-    interface OnMeizhiTouchListener
+    public interface OnMeizhiTouchListener
     {
         void onTouch(View view, RatioImageView RameizhiView, View card, Meizhi meizhi);
     }
