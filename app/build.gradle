@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.you.mm"
-        minSdkVersion 9
+        minSdkVersion 11
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -47,4 +47,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile 'com.commit451:PhotoView:1.2.4'
 }

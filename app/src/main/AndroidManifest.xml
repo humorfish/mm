@@ -22,6 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".page.PictureActivity"/>
 
         <meta-data android:name="design_width" android:value="768">
         </meta-data>

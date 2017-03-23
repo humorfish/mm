@@ -1,5 +1,6 @@
 package com.you.mm.page.base;
 
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -78,7 +79,7 @@ public abstract class ToolbarActivity extends BaseActivity
         mAppBar.setAlpha(alpha);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     protected void hideOrShowToolbar()
     {
         mAppBar.animate()

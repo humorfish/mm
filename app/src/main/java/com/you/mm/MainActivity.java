@@ -1,12 +1,16 @@
 package com.you.mm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.litesuits.orm.db.assit.QueryBuilder;
 import com.litesuits.orm.db.model.ConflictAlgorithm;
@@ -17,6 +21,7 @@ import com.you.mm.bean.Meizhi;
 import com.you.mm.bean.data.MeizhiData;
 import com.you.mm.bean.data.休息视频data;
 import com.you.mm.bean.entity.Gank;
+import com.you.mm.page.PictureActivity;
 import com.you.mm.page.adapter.MeizhiListAdapter;
 import com.you.mm.page.base.SwipeRefreshBaseActivity;
 import com.you.mm.util.Dates;
@@ -157,6 +162,7 @@ public class MainActivity extends SwipeRefreshBaseActivity
                     public void onSuccess()
                     {
                         mMeizhiBeTouched = false;
+                        startPictureActivity(meizhi, RameizhiView);
                     }
 
                     @Override
@@ -165,6 +171,10 @@ public class MainActivity extends SwipeRefreshBaseActivity
                         mMeizhiBeTouched = false;
                     }
                 });
+            }
+            else if(view ==  card)
+            {
+
             }
         };
     }
@@ -253,5 +263,19 @@ public class MainActivity extends SwipeRefreshBaseActivity
     private void saveMeizhis(List<Meizhi> meizhis)
     {
         App.sDb.insert(meizhis, ConflictAlgorithm.Replace);
+    }
+
+    private void startPictureActivity(Meizhi meizhi, View transitView)
+    {
+        Intent pictureIntent = PictureActivity.newIntent(this, meizhi.url, meizhi.desc);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, transitView, PictureActivity.TRANSIT_PIC);
+        try
+        {
+            ActivityCompat.startActivity(this, pictureIntent, optionsCompat.toBundle());
+        } catch (IllegalArgumentException e)
+        {
+            e.printStackTrace();
+            startActivity(pictureIntent);
+        }
     }
 }
