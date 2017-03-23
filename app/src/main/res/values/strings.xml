@@ -28,6 +28,12 @@
     <string name="tip_copy_done">复制成功</string>
     <string name="tip_picture_save_fail">图片保存失败，请再次尝试保存！</string>
 
+    <string name="no_data_the_day">今天没有妹纸</string>
+    <string name="loading_num_of">正在加载：</string>
+    <string name="heads_up_title">妹纸.gank.io</string>
+    <string name="heads_up_content">今天的妹纸已经准备好了，快来享用吧~</string>
+    <string name="ask_saving_picture">保存到手机?</string>
+    <string name="picture_has_save_to">图片已保存至 %s 文件夹</string>
 
     <string name="loading">加载中...</string>
     <string name="snap_load_fail">加载失败，请重试</string>
