@@ -21,6 +21,7 @@ import com.you.mm.bean.Meizhi;
 import com.you.mm.bean.data.MeizhiData;
 import com.you.mm.bean.data.休息视频data;
 import com.you.mm.bean.entity.Gank;
+import com.you.mm.page.GankAcitity;
 import com.you.mm.page.PictureActivity;
 import com.you.mm.page.adapter.MeizhiListAdapter;
 import com.you.mm.page.base.SwipeRefreshBaseActivity;
@@ -174,9 +175,16 @@ public class MainActivity extends SwipeRefreshBaseActivity
             }
             else if(view ==  card)
             {
-
+                startGankActivity(meizhi.publishedAt);
             }
         };
+    }
+
+    private void startGankActivity(Date publishedAt)
+    {
+        Intent intent = new Intent(this, GankAcitity.class);
+        intent.putExtra(GankAcitity.EXTRA_GANK_DATE, publishedAt);
+        startActivity(intent);
     }
 
     /**

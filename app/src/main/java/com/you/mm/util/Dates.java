@@ -1,5 +1,7 @@
 package com.you.mm.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -22,5 +24,11 @@ public class Dates
         int anotherDay = _another.get(Calendar.DAY_OF_YEAR);
 
         return oneDay == anotherDay;
+    }
+
+    public static String toDate(Date date)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        return dateFormat.format(date);
     }
 }
