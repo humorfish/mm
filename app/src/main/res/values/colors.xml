@@ -15,4 +15,8 @@
     <color name="about_header_background">@color/theme_primary_darker</color>
 
     <color name="lite_blue">#ff359ff2</color>
+
+
+    <color name="background_gank">@color/white</color>
+
 </resources>
