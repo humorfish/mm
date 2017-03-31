@@ -3,6 +3,8 @@ package com.you.mm.page;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.you.mm.R;
 import com.you.mm.page.adapter.GankPagerAdapter;
@@ -52,6 +54,19 @@ public class GankAcitity extends ToolbarActivity implements ViewPager.OnPageChan
         mGankDate = (Date)getIntent().getSerializableExtra(EXTRA_GANK_DATE);
         setTitle(Dates.toDate(mGankDate));
         initViewPager();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu_gank, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        return super.onOptionsItemSelected(item);
     }
 
     private void initViewPager()
