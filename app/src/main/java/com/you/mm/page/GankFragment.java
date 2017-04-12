@@ -14,27 +14,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
+import com.bumptech.glide.Glide;
 import com.you.mm.R;
+import com.you.mm.bean.DrakeetFactory;
 import com.you.mm.bean.entity.Gank;
+import com.you.mm.bean.entity.GankData;
 import com.you.mm.page.adapter.GankListAdapter;
+import com.you.mm.page.base.BaseActivity;
+import com.you.mm.util.LoveStrings;
 import com.you.mm.util.Once;
 import com.you.mm.util.Shares;
 import com.you.mm.util.Toasts;
 import com.you.mm.widget.LoveVideoView;
 import com.you.mm.widget.VideoImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by Administrator on 2017/3/28.
  */
 
-public class GankFrament extends Fragment
+public class GankFragment extends Fragment
 {
     private final String TAG = "GankFragment";
 
@@ -66,9 +78,9 @@ public class GankFrament extends Fragment
     {
     }
 
-    public static GankFrament newInstance(int year, int month, int day)
+    public static GankFragment newInstance(int year, int month, int day)
     {
-        GankFrament fragment = new GankFrament();
+        GankFragment fragment = new GankFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_YEAR, year);
         args.putInt(ARG_MONTH, month);
@@ -102,13 +114,101 @@ public class GankFrament extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_gank, container, false);
-        ButterKnife.bind(rootView);
+        ButterKnife.bind(this, rootView);
         initRecyclerView();
         setVideoViewPosition(getResources().getConfiguration());
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        if (mGankList.size() == 0)
+            loadData();
 
+        if (mVideoPreviewUrl != null)
+            Glide.with(this).load(mVideoPreviewUrl).into(mVideoImageView);
+    }
+
+    private void loadData()
+    {
+        loadVideoPreview();
+        mDisposable = BaseActivity.sGankIO
+                .getGankData(mYear, mMonth, mDay)
+                .map(data -> data.results)
+                .map(this::addAllResults)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(gankList ->
+                {
+                    if (gankList.isEmpty())
+                    {
+                        showEmptyView();
+                    }
+                    else
+                    {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }, Throwable::printStackTrace);
+    }
+
+    private List<Gank> addAllResults(GankData.Result results) {
+        if (results.androidList != null) mGankList.addAll(results.androidList);
+        if (results.iOSList != null) mGankList.addAll(results.iOSList);
+        if (results.appList != null) mGankList.addAll(results.appList);
+        if (results.拓展资源List != null) mGankList.addAll(results.拓展资源List);
+        if (results.瞎推荐List != null) mGankList.addAll(results.瞎推荐List);
+        if (results.休息视频List != null) mGankList.addAll(0, results.休息视频List);
+        return mGankList;
+    }
+
+    private void loadVideoPreview()
+    {
+        String where  = String.format("{\"tag\":\"%d-%d-%d\"}", mYear, mMonth, mDay);
+
+        DrakeetFactory.getDrakeetSingleton()
+                .getDGankData(where)
+                .map(dGankData -> dGankData.results)
+                .filter(dGanks -> dGanks.size() > 0)
+                .map(dGanks -> dGanks.get(0))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(dGank -> startPreview(dGank.preview),
+                        throwable -> getOldVideoPreview(new OkHttpClient()));
+    }
+
+    private void startPreview(String preview)
+    {
+        mVideoPreviewUrl = preview;
+        if(preview != null && mVideoImageView != null)
+        {
+            mVideoView.post(() ->
+                    Glide.with(mVideoImageView.getContext()).load(preview).into(mVideoImageView));
+        }
+    }
+
+    private void getOldVideoPreview(OkHttpClient client)
+    {
+        String httpUrl = "http://gank.io/" + String.format("%d%d%d", mYear, mMonth, mDay);
+        Request mRequest = new Request.Builder().url(httpUrl).build();
+        client.newCall(mRequest).enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                String body = response.body().string();
+                mVideoPreviewUrl = LoveStrings.getVideoPreviewImageUrl(body);
+                startPreview(mVideoPreviewUrl);
+            }
+        });
+    }
+
+    private void showEmptyView() {mEmptyViewStub.inflate();}
 
     private void setVideoViewPosition(Configuration configuration)
     {

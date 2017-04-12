@@ -13,28 +13,24 @@ import com.you.mm.R;
  * Created by Administrator on 2017/3/28.
  */
 
-public class AnimRecyclerViewAdapter <T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T>
+public class AnimRecyclerViewAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T>
 {
+
     private static final int DELAY = 138;
     private int mLastPosition = -1;
 
 
-    @Override
-    public T onCreateViewHolder(ViewGroup parent, int viewType)
+    @Override public T onCreateViewHolder(ViewGroup parent, int viewType)
     {
         return null;
     }
 
-    @Override
-    public void onBindViewHolder(T holder, int position)
-    {
-    }
 
-    @Override
-    public int getItemCount()
-    {
-        return 0;
-    }
+    @Override public void onBindViewHolder(T holder, int position) {}
+
+
+    @Override public int getItemCount() {return 0;}
+
 
     public void showItemAnim(final View view, final int position)
     {
@@ -47,24 +43,20 @@ public class AnimRecyclerViewAdapter <T extends RecyclerView.ViewHolder> extends
                 Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_in_right);
                 animation.setAnimationListener(new Animation.AnimationListener()
                 {
-                    @Override
-                    public void onAnimationStart(Animation animation)
+                    @Override public void onAnimationStart(Animation animation)
                     {
                         view.setAlpha(1);
                     }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation)
-                    {
-                    }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation)
-                    {
-                    }
+                    @Override public void onAnimationEnd(Animation animation) {}
+
+
+                    @Override public void onAnimationRepeat(Animation animation) {}
                 });
-            }, DELAY * position);
 
+                view.startAnimation(animation);
+            }, DELAY * position);
             mLastPosition = position;
         }
     }

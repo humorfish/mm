@@ -4,6 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.you.mm.bean.DrakeetFactory;
+import com.you.mm.page.GankFragment;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,12 +31,12 @@ public class GankPagerAdapter extends FragmentPagerAdapter
         calendar.setTime(mDate);
         calendar.add(Calendar.DATE, -position);
 
-        return GankFrament;
+        return GankFragment.newInstance(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
     public int getCount()
     {
-        return 0;
+        return DrakeetFactory.gankSize;
     }
 }

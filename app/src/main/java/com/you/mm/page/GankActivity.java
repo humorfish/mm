@@ -30,9 +30,9 @@ import io.reactivex.disposables.Disposable;
  * Created by Administrator on 2017/3/27.
  */
 
-public class GankAcitity extends ToolbarActivity implements ViewPager.OnPageChangeListener
+public class GankActivity extends ToolbarActivity implements ViewPager.OnPageChangeListener
 {
-    private final String TAG  = GankAcitity.class.getSimpleName();
+    private final String TAG  = GankActivity.class.getSimpleName();
     private Disposable mDisposable;
 
     public static final String EXTRA_GANK_DATE = "gank_date";
@@ -135,7 +135,6 @@ public class GankAcitity extends ToolbarActivity implements ViewPager.OnPageChan
     protected void hideOrShowToolbar()
     {
         View toolbar = findViewById(R.id.toolbar_with_indicator);
-        assert toolbar != null;
         toolbar.animate()
                 .translationY(mIsHiden ? 0 : -mToolbar.getHeight())
                 .setInterpolator(new DecelerateInterpolator(2))

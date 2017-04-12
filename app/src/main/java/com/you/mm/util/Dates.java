@@ -31,4 +31,12 @@ public class Dates
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return dateFormat.format(date);
     }
+
+    public static String toDate(Date date, int add)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, add);
+        return toDate(calendar.getTime());
+    }
 }

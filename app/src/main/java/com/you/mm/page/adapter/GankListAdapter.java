@@ -23,27 +23,24 @@ import butterknife.OnClick;
 
 public class GankListAdapter extends AnimRecyclerViewAdapter<GankListAdapter.ViewHolder>
 {
+
     private List<Gank> mGankList;
+
 
     public GankListAdapter(List<Gank> gankList)
     {
-        this.mGankList = gankList;
+        mGankList = gankList;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_gank, parent, false);
-
-
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_gank, parent, false);
         return new ViewHolder(v);
     }
 
-    @Override
-    public int getItemCount()
-    {
-        return mGankList.size();
-    }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
@@ -66,7 +63,6 @@ public class GankListAdapter extends AnimRecyclerViewAdapter<GankListAdapter.Vie
                 hideCategory(holder);
             }
         }
-
         holder.category.setText(gank.type);
         SpannableStringBuilder builder = new SpannableStringBuilder(gank.desc).append(
                 StringStyles.format(holder.gank.getContext(), " (via. " +
@@ -75,13 +71,22 @@ public class GankListAdapter extends AnimRecyclerViewAdapter<GankListAdapter.Vie
         CharSequence gankText = builder.subSequence(0, builder.length());
 
         holder.gank.setText(gankText);
+        showItemAnim(holder.gank, position);
     }
+
+
+    @Override
+    public int getItemCount()
+    {
+        return mGankList.size();
+    }
+
 
     private void showCategory(ViewHolder holder)
     {
-        if (! isVisibleOf(holder.category))
-            holder.category.setVisibility(View.VISIBLE);
+        if (!isVisibleOf(holder.category)) holder.category.setVisibility(View.VISIBLE);
     }
+
 
     private void hideCategory(ViewHolder holder)
     {
@@ -97,6 +102,7 @@ public class GankListAdapter extends AnimRecyclerViewAdapter<GankListAdapter.Vie
         return view.getVisibility() == View.VISIBLE;
     }
 
+
     class ViewHolder extends RecyclerView.ViewHolder
     {
 
@@ -109,19 +115,17 @@ public class GankListAdapter extends AnimRecyclerViewAdapter<GankListAdapter.Vie
         public ViewHolder(View itemView)
         {
             super(itemView);
-            ButterKnife.bind(itemView);
+            ButterKnife.bind(this, itemView);
         }
+
 
         @OnClick(R.id.gank_layout)
         void onGank(View v)
         {
-            Gank gank = mGankList.get(getLayoutPosition());
-
+//            Gank gank = mGankList.get(getLayoutPosition());
+//            Intent intent = WebActivity.newIntent(v.getContext(), gank.url, gank.desc);
+//            v.getContext().startActivity(intent);
         }
-
-
     }
-
-
-
 }
+

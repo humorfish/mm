@@ -27,15 +27,12 @@ public class DrakeetFactory
         }
     }
 
-    public static DrakeetApi getsDrakeetSingleton()
+    public static DrakeetApi getDrakeetSingleton()
     {
-        synchronized (monitor)
-        {
-            if (sDrakeetSingleton ==  null)
-            {
+        synchronized (monitor) {
+            if (sDrakeetSingleton == null) {
                 sDrakeetSingleton = new DrakeetRetrofit().getDrakeetService();
             }
-
             return sDrakeetSingleton;
         }
     }
